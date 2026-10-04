@@ -1,0 +1,4 @@
+Panduan Penggunaan Repositori:
+1. Letakkan berkas sesuai subfolder atau buat folder baru sesuka Anda.
+2. Format yang diperbolehkan hanya: .png, .txt, .iso, .ova.
+3. Mendukung unduhan multi-part / resume lewat curl atau download manager.
