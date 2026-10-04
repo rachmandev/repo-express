@@ -363,9 +363,11 @@ export function renderHtmlDirectoryListing(
     .badge-doc   { background: rgba(13,110,253,0.15);  color: var(--badge-doc); }
     .badge-pdf   { background: rgba(230,57,70,0.15);   color: var(--badge-pdf); }
     .badge-text  { background: rgba(40,167,69,0.15);   color: var(--badge-text); }
-    .badge-iso   { background: rgba(111,66,193,0.15);  color: var(--badge-iso); }
-    .badge-ova   { background: rgba(8,145,178,0.15);   color: var(--badge-ova); }
-    .badge-file  { background: rgba(108,117,125,0.15); color: var(--badge-file); }
+    .badge-iso     { background: rgba(111,66,193,0.15);  color: var(--badge-iso); }
+    .badge-dmg     { background: rgba(132,94,194,0.15);  color: var(--badge-dmg); }
+    .badge-ova     { background: rgba(8,145,178,0.15);   color: var(--badge-ova); }
+    .badge-archive { background: rgba(176,86,255,0.15);  color: var(--badge-archive); }
+    .badge-file    { background: rgba(108,117,125,0.15); color: var(--badge-file); }
 
     .btn-action {
       font-size: 11px;

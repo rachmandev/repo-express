@@ -1,6 +1,6 @@
 # repo-express — Debian-Style File Repository & Auto-Discovery
 
-Server repositori berkas dengan antarmuka bergaya **Debian Mirror** (`Index of /...`) dan fitur **Real-Time Auto Discovery** otomatis untuk file & folder. Dibangun menggunakan **Express 5** dan **Bun**. Dikhususkan untuk menyimpan dan mendistribusikan file gambar, video, dokumen, image OS, dan virtual appliance (**JPG, JPEG, PNG, WEBP, MP4, MKV, PDF, TXT, DOC, DOCX, ISO, IMG, OVA**).
+Server repositori berkas dengan antarmuka bergaya **Debian Mirror** (`Index of /...`) dan fitur **Real-Time Auto Discovery** otomatis untuk file & folder. Dibangun menggunakan **Express 5** dan **Bun**. Dikhususkan untuk menyimpan dan mendistribusikan file gambar, video, dokumen, image OS, virtual appliance, dan arsip terkompresi (**JPG, JPEG, PNG, WEBP, MP4, MKV, PDF, TXT, DOC, DOCX, ISO, IMG, DMG, OVA, ZIP, RAR**).
 
 ---
 
@@ -17,7 +17,8 @@ Server repositori berkas dengan antarmuka bergaya **Debian Mirror** (`Index of /
   - 🖼️ **Gambar (`.jpg`, `.jpeg`, `.png`, `.webp`)**: Foto, tangkapan layar, diagram (dengan preview thumbnail saat hover).
   - 🎥 **Video (`.mp4`, `.mkv`)**: Rekaman video, media streaming.
   - 📄 **Dokumen (`.pdf`, `.txt`, `.doc`, `.docx`)**: Catatan, manual, dokumen kantor, log.
-  - 💿 **Image & VM (`.iso`, `.img`, `.ova`)**: Image CD/DVD/OS dan Virtual Appliance (VirtualBox, VMware, Proxmox).
+  - 💿 **Image & VM (`.iso`, `.img`, `.dmg`, `.ova`)**: Image CD/DVD/OS, Apple Disk Image (macOS), dan Virtual Appliance (VirtualBox, VMware, Proxmox).
+  - 📦 **Arsip (`.zip`, `.rar`)**: Berkas terkompresi ZIP dan WinRAR.
   - *Format berkas di luar daftar ini otomatis ditolak saat diunggah.*
 - 📥 **Upload Berkas Fleksibel**:
   - Drag & drop berkas langsung ke browser Web UI.
