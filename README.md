@@ -1,5 +1,16 @@
 # 🌀 swirl-mirror — Debian-Style File Repository & Auto-Discovery
 
+<p align="left">
+  <a href="https://github.com/rachmandev/swirl-mirror/stargazers"><img src="https://img.shields.io/github/stars/rachmandev/swirl-mirror?style=flat-square&logo=github&color=D70A53" alt="Stars"></a>
+  <a href="https://github.com/rachmandev/swirl-mirror/network/members"><img src="https://img.shields.io/github/forks/rachmandev/swirl-mirror?style=flat-square&logo=git&color=D70A53" alt="Forks"></a>
+  <a href="https://github.com/rachmandev/swirl-mirror/releases"><img src="https://img.shields.io/github/v/release/rachmandev/swirl-mirror?style=flat-square&color=D70A53" alt="Release"></a>
+  <a href="https://github.com/rachmandev/swirl-mirror/releases"><img src="https://img.shields.io/github/downloads/rachmandev/swirl-mirror/total?style=flat-square&color=D70A53" alt="Downloads"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg?style=flat-square" alt="License: AGPL-3.0"></a>
+  <a href="https://bun.sh"><img src="https://img.shields.io/badge/Runtime-Bun_1.4+-000000?style=flat-square&logo=bun" alt="Bun"></a>
+  <a href="https://expressjs.com"><img src="https://img.shields.io/badge/Framework-Express_5-gray?style=flat-square&logo=express" alt="Express 5"></a>
+  <a href="docker-compose.yml"><img src="https://img.shields.io/badge/Docker-Ready-2496ED?style=flat-square&logo=docker&logoColor=white" alt="Docker"></a>
+</p>
+
 > **💡 Solusi Praktis Berbagi Berkas di Lingkungan Lab & Jaringan Lokal**  
 > Proyek ini dibuat berawal dari kebutuhan nyata di lingkungan lab: ketika ingin memindahkan atau menyalin berkas antar-komputer seringkali ribet harus colok-cabut flashdisk atau harddisk eksternal secara bergantian.  
 >  
@@ -181,3 +192,50 @@ curl -X POST http://localhost:3000/api/mkdir \
 # Menghapus berkas
 curl -X DELETE http://localhost:3000/docs/panduan.txt
 ```
+
+---
+
+## 💖 Dukungan & Donasi
+
+Jika proyek **swirl-mirror** ini bermanfaat dan membantu mempermudah aktivitas berbagi berkas di lab atau lingkungan kerja Anda, pertimbangkan untuk memberikan donasi atau traktiran kopi untuk mendukung pengembangan proyek ini:
+
+<p align="left">
+  <a href="https://saweria.co/rachmandev" target="_blank">
+    <img src="https://img.shields.io/badge/Saweria-Dukung_Karya-FAAE2B?style=for-the-badge&logo=ko-fi&logoColor=black" alt="Saweria" />
+  </a>
+  &nbsp;
+  <a href="https://trakteer.id/rachmandev" target="_blank">
+    <img src="https://img.shields.io/badge/Trakteer-Traktir_Kopi-be1e2d?style=for-the-badge&logo=buy-me-a-coffee&logoColor=white" alt="Trakteer" />
+  </a>
+  &nbsp;
+  <a href="https://www.buymeacoffee.com/rachmandev" target="_blank">
+    <img src="https://img.shields.io/badge/Buy_Me_A_Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black" alt="Buy Me A Coffee" />
+  </a>
+  &nbsp;
+  <a href="https://paypal.me/rachmandev" target="_blank">
+    <img src="https://img.shields.io/badge/PayPal-Donasi-00457C?style=for-the-badge&logo=paypal&logoColor=white" alt="PayPal" />
+  </a>
+  &nbsp;
+  <a href="https://github.com/sponsors/rachmandev" target="_blank">
+    <img src="https://img.shields.io/badge/GitHub_Sponsors-EA4AAA?style=for-the-badge&logo=github-sponsors&logoColor=white" alt="GitHub Sponsors" />
+  </a>
+</p>
+
+Dukungan juga sangat berarti dengan memberikan ⭐ **Star** dan 🍴 **Fork** pada repositori ini di GitHub! Terima kasih banyak! 🙌
+
+---
+
+## 📄 Lisensi
+
+Proyek ini dilisensikan di bawah lisensi open source **[GNU Affero General Public License v3.0 (AGPL-3.0)](LICENSE)**.
+
+```text
+swirl-mirror — Debian-Style File Repository & Auto-Discovery
+Copyright (C) 2026 Rachman
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published
+by the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+```
+
