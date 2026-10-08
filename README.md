@@ -71,7 +71,23 @@ docker compose logs -f
 docker compose down
 ```
 
-### 2. Menjalankan secara Langsung (Native Bun)
+### 2. Menggunakan Docker Image dari GHCR
+Anda juga dapat langsung menarik (*pull*) image siap pakai dari GitHub Container Registry tanpa perlu build manual:
+
+```bash
+# Tarik image dari GHCR
+docker pull ghcr.io/rachmandev/swirl-mirror:latest
+
+# Jalankan container
+docker run -d \
+  --name swirl-mirror \
+  -p 3000:3000 \
+  -v $(pwd)/storage:/app/storage \
+  --env-file .env \
+  ghcr.io/rachmandev/swirl-mirror:latest
+```
+
+### 3. Menjalankan secara Langsung (Native Bun)
 ```bash
 # Mode development (live-reload)
 bun run dev
@@ -82,7 +98,7 @@ bun run start
 
 Server aktif di: **http://localhost:3000/**
 
-### 3. Konfigurasi (`.env`)
+### 4. Konfigurasi (`.env`)
 
 Semua konfigurasi dan kredensial sensitif disimpan di dalam file `.env` (file ini otomatis diabaikan oleh Git via `.gitignore`). Template tersedia di `.env.example`.
 

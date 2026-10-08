@@ -4,3 +4,4 @@ storage
 .gitignore
 *.log
 .DS_Store
+.env*
