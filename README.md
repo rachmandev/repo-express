@@ -1,8 +1,13 @@
 # 🌀 swirl-mirror — Debian-Style File Repository & Auto-Discovery
 
 > **💡 Solusi Praktis Berbagi Berkas di Lingkungan Lab & Jaringan Lokal**  
-> Proyek ini dibuat berawal dari kebutuhan di lingkungan lab: ketika ingin memindahkan atau menyalin berkas antar-komputer seringkali ribet harus colok-cabut flashdisk atau harddisk eksternal secara bergantian.  
-> Terinspirasi dari repositori mirror resmi **Debian** (`Index of /...`), **swirl-mirror** hadir sebagai server repositori berkas lokal yang ringan, cepat, dan siap pakai tanpa ribet!
+> Proyek ini dibuat berawal dari kebutuhan nyata di lingkungan lab: ketika ingin memindahkan atau menyalin berkas antar-komputer seringkali ribet harus colok-cabut flashdisk atau harddisk eksternal secara bergantian.  
+>  
+> Sebenarnya sudah ada protokol seperti **FTP** atau file sharing jaringan lainnya, namun seringkali kurang praktis dan kurang ramah bagi banyak pengguna karena harus menginstal aplikasi pihak ketiga (seperti FileZilla), konfigurasi koneksi, hingga pengaturan port.  
+>  
+> Demi **kenyamanan dan kemudahan maksimal bagi pengguna (*user-friendly*)**, dengan **swirl-mirror** siapa pun cukup membuka browser dan mengetikkan **IP atau domain internal** di address bar (misal: `http://192.168.1.50:3000` atau `http://repo.lab.internal`) — **langsung selesai!** Siapa saja bisa langsung menjelajah, mempratinjau, dan mengunduh berkas tanpa perlu instalasi aplikasi tambahan apa pun.  
+>  
+> Terinspirasi dari tampilan repositori mirror resmi **Debian** (`Index of /...`), **swirl-mirror** hadir sebagai server repositori berkas lokal yang ringan, instan, otomatis mendeteksi berkas baru (*real-time auto-discovery*), dan siap pakai.
 
 Server repositori berkas dengan antarmuka bergaya **Debian Mirror** dan fitur **Real-Time Auto Discovery** otomatis untuk file & folder. Dibangun menggunakan **Express 5** dan runtime **Bun**. Dikhususkan untuk menyimpan dan mendistribusikan file gambar, video, dokumen, image OS, virtual appliance, dan arsip terkompresi (**JPG, JPEG, PNG, WEBP, MP4, MKV, PDF, TXT, DOC, DOCX, ISO, IMG, DMG, OVA, ZIP, RAR**).
 
