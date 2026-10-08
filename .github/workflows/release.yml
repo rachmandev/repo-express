@@ -1,0 +1,83 @@
+name: Create GitHub Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Versi tag yang akan dirilis (contoh: v1.0.0)"
+        required: true
+        type: string
+        default: "v1.0.0"
+      title:
+        description: "Judul rilis (opsional, default: nama tag)"
+        required: false
+        type: string
+      prerelease:
+        description: "Tandai sebagai pre-release"
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Publish Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup tag name & title
+        id: vars
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            TAG="${{ inputs.tag }}"
+            TITLE="${{ inputs.title }}"
+            if [ -z "$TITLE" ]; then
+              TITLE="$TAG"
+            fi
+            # Buat tag git jika dijalankan lewat manual trigger dan belum ada
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            if ! git rev-parse "$TAG" >/dev/null 2>&1; then
+              git tag -a "$TAG" -m "Release $TAG"
+              git push origin "$TAG"
+            fi
+          else
+            TAG="${{ github.ref_name }}"
+            TITLE="${{ github.ref_name }}"
+          fi
+
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+          echo "title=$TITLE" >> $GITHUB_OUTPUT
+
+      - name: Create Release Package (Zip & Tar.gz bundle)
+        run: |
+          mkdir -p dist
+          # Bundle file docker compose & env template untuk kemudahan deploy cepat
+          zip -j dist/swirl-mirror-docker-quickstart.zip docker-compose.yml .env.example README.md LICENSE
+          tar -czvf dist/swirl-mirror-docker-quickstart.tar.gz docker-compose.yml .env.example README.md LICENSE
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.vars.outputs.tag }}
+          name: ${{ steps.vars.outputs.title }}
+          generate_release_notes: true
+          draft: false
+          prerelease: ${{ inputs.prerelease || false }}
+          files: |
+            dist/swirl-mirror-docker-quickstart.zip
+            dist/swirl-mirror-docker-quickstart.tar.gz
+            docker-compose.yml
+            .env.example
+
