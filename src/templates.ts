@@ -11,10 +11,12 @@ export function renderHtmlDirectoryListing(
     serverHost: string;
     serverPort: number | string;
     title?: string;
+    isAdmin?: boolean;
   }
 ): string {
   const { currentPath, parentPath, breadcrumbs, items, totalDirs, totalFiles, formattedTotalSize } = listing;
   const title = options.title || 'Debian File Repository';
+  const isAdmin = options.isAdmin ?? false;
 
   const breadcrumbsHtml = breadcrumbs
     .map((crumb, idx) => {
@@ -205,6 +207,24 @@ export function renderHtmlDirectoryListing(
     }
 
     .btn-primary:hover { background: var(--debian-dark-red); }
+
+    .btn-login {
+      background: #0066cc;
+      border-color: #0052a3;
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    .btn-login:hover { background: #0052a3; }
+
+    .btn-logout {
+      background: #495057;
+      border-color: #343a40;
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    .btn-logout:hover { background: #343a40; }
 
     .breadcrumbs-bar {
       margin-top: 10px;
@@ -445,12 +465,17 @@ export function renderHtmlDirectoryListing(
         <h1>Index of <span class="brand-debian">${escapeHtml(currentPath)}</span></h1>
       </a>
       <div class="top-controls">
+        ${isAdmin ? `
         <button class="btn btn-primary" onclick="triggerFileUpload()" title="Unggah berkas (${allowedList})">+ Unggah Berkas</button>
-        <button class="btn" onclick="createNewFolder()" title="Buat folder baru">+ Folder Baru</button>
+        <button class="btn" onclick="createNewFolder()" title="Buat folder baru">+ Folder Baru</button>` : ''}
         <a href="?format=json" class="btn" title="Lihat dalam format JSON API">JSON</a>
         <a href="?format=text" class="btn" title="Lihat dalam format teks biasa">Raw Text</a>
         <button class="btn" id="themeToggle" onclick="toggleTheme()" title="Ganti Mode Gelap/Terang">&#x1F313; Tema</button>
         <button class="btn" id="modeToggle" onclick="toggleClassicMode()" title="Ganti Tampilan Klasik/Modern">&#x1F5A5;&#xFE0F; Klasik</button>
+        ${isAdmin
+          ? `<a href="/auth/logout" class="btn btn-logout" title="Logout Admin">&#x1F511; Logout</a>`
+          : `<a href="/login" class="btn btn-login" title="Login sebagai Admin">&#x1F511; Login Admin</a>`
+        }
       </div>
     </div>
     <div class="breadcrumbs-bar">
@@ -458,7 +483,7 @@ export function renderHtmlDirectoryListing(
     </div>
   </header>
 
-  <input type="file" id="fileUploadInput" accept="${acceptAttr}" style="display:none" onchange="handleFileSelected(event)">
+  ${isAdmin ? `<input type="file" id="fileUploadInput" accept="${acceptAttr}" style="display:none" onchange="handleFileSelected(event)">` : ''}
 
   <div class="upload-progress" id="uploadProgress">
     <span id="uploadFileName">Mengunggah...</span>
@@ -709,4 +734,79 @@ function escapeHtml(str: string): string {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#039;');
+}
+
+export function renderLoginPage(options: {
+  serverHost: string;
+  serverPort: number | string;
+  title?: string;
+  error?: string;
+  redirect?: string;
+}): string {
+  const title = escapeHtml(options.title || 'Login Admin');
+  const host = escapeHtml(options.serverHost);
+  const error = options.error ? escapeHtml(options.error) : '';
+  const redirect = options.redirect ? escapeHtml(options.redirect) : '/';
+
+  const SWIRL = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="64" height="64"><circle cx="50" cy="50" r="48" fill="#D70A53"/><path d="M50 15 C30 15,15 30,15 50 C15 65,25 78,39 83 C28 76,22 64,22 52 C22 35,35 22,52 22 C62 22,71 27,76 35 C71 24,61 15,50 15 Z" fill="white"/><circle cx="50" cy="52" r="10" fill="white"/></svg>';
+
+  return '<!DOCTYPE html>\n' +
+    '<html lang="id">\n' +
+    '<head>\n' +
+    '<meta charset="UTF-8">\n' +
+    '<meta name="viewport" content="width=device-width, initial-scale=1.0">\n' +
+    '<title>' + title + ' — Debian File Repository</title>\n' +
+    '<style>\n' +
+    '*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }\n' +
+    'body { font-family: "DejaVu Sans Mono", "Courier New", monospace; background: #f5f5f5; min-height: 100vh; display: flex; flex-direction: column; }\n' +
+    '.top-bar { background: #D70A53; color: white; padding: 8px 20px; font-size: 13px; display: flex; align-items: center; gap: 10px; }\n' +
+    '.top-bar svg { flex-shrink: 0; }\n' +
+    '.top-bar span { font-weight: bold; letter-spacing: 0.5px; }\n' +
+    '.main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px 16px; }\n' +
+    '.card { background: white; border: 1px solid #ccc; border-top: 4px solid #D70A53; border-radius: 4px; width: 100%; max-width: 400px; padding: 32px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }\n' +
+    '.card-header { text-align: center; margin-bottom: 28px; }\n' +
+    '.card-header .logo { margin-bottom: 12px; }\n' +
+    '.card-header h1 { font-size: 20px; color: #222; margin-bottom: 4px; }\n' +
+    '.card-header p { font-size: 12px; color: #666; }\n' +
+    '.form-group { margin-bottom: 16px; }\n' +
+    'label { display: block; font-size: 12px; font-weight: bold; color: #444; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }\n' +
+    'input[type=text], input[type=password] { width: 100%; padding: 9px 12px; border: 1px solid #ccc; border-radius: 3px; font-family: inherit; font-size: 14px; outline: none; transition: border-color 0.2s; }\n' +
+    'input[type=text]:focus, input[type=password]:focus { border-color: #D70A53; box-shadow: 0 0 0 2px rgba(215,10,83,0.15); }\n' +
+    '.btn-submit { width: 100%; padding: 10px; background: #D70A53; color: white; border: none; border-radius: 3px; font-family: inherit; font-size: 14px; font-weight: bold; cursor: pointer; transition: background 0.2s; margin-top: 8px; }\n' +
+    '.btn-submit:hover { background: #b5083f; }\n' +
+    '.error-box { background: #fff0f3; border: 1px solid #f5c2cc; border-left: 4px solid #D70A53; border-radius: 3px; padding: 10px 14px; margin-bottom: 16px; font-size: 13px; color: #8b0000; }\n' +
+    '.back-link { text-align: center; margin-top: 20px; font-size: 12px; }\n' +
+    '.back-link a { color: #0044cc; text-decoration: none; }\n' +
+    '.back-link a:hover { text-decoration: underline; }\n' +
+    'footer { text-align: center; padding: 12px; font-size: 11px; color: #888; border-top: 1px solid #ddd; background: #fafafa; }\n' +
+    '</style>\n' +
+    '</head>\n' +
+    '<body>\n' +
+    '<div class="top-bar">' + SWIRL + '<span>Debian File Repository — Panel Admin</span></div>\n' +
+    '<div class="main">\n' +
+    '<div class="card">\n' +
+    '<div class="card-header">\n' +
+    '<div class="logo">' + SWIRL + '</div>\n' +
+    '<h1>Login Admin</h1>\n' +
+    '<p>Masuk untuk mengelola repositori</p>\n' +
+    '</div>\n' +
+    (error ? '<div class="error-box">⚠ ' + error + '</div>\n' : '') +
+    '<form method="POST" action="/auth/login" autocomplete="off">\n' +
+    '<input type="hidden" name="redirect" value="' + redirect + '">\n' +
+    '<div class="form-group">\n' +
+    '<label for="username">Nama Pengguna</label>\n' +
+    '<input type="text" id="username" name="username" placeholder="admin" required autofocus>\n' +
+    '</div>\n' +
+    '<div class="form-group">\n' +
+    '<label for="password">Kata Sandi</label>\n' +
+    '<input type="password" id="password" name="password" placeholder="••••••••" required>\n' +
+    '</div>\n' +
+    '<button type="submit" class="btn-submit">🔐 Masuk</button>\n' +
+    '</form>\n' +
+    '<div class="back-link"><a href="/">← Kembali ke Repositori</a></div>\n' +
+    '</div>\n' +
+    '</div>\n' +
+    '<footer>Apache/2.4.62 (Debian) Server at ' + host + ' Port ' + options.serverPort + '</footer>\n' +
+    '</body>\n' +
+    '</html>';
 }

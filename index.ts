@@ -7,7 +7,15 @@ import {
   renderAsciiDirectoryListing,
   renderNotFoundHtml,
   renderForbiddenHtml,
+  renderLoginPage,
 } from './src/templates.ts';
+import {
+  isAuthenticated,
+  checkCredentials,
+  createSessionToken,
+  makeSetCookieHeader,
+  makeClearCookieHeader,
+} from './src/auth.ts';
 
 // ─── Configuration ───────────────────────────────────────────────────────────
 const PORT = Number(process.env.PORT) || 3000;
@@ -23,6 +31,7 @@ const app = express();
 
 // ─── Middleware ───────────────────────────────────────────────────────────────
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
 // CORS & Server header
 app.use((req: Request, res: Response, next: NextFunction) => {
@@ -43,6 +52,43 @@ app.use((req: Request, res: Response, next: NextFunction) => {
     console.log(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl} ${res.statusCode} ${Date.now() - start}ms`);
   });
   next();
+});
+
+// ─── Auth Routes ─────────────────────────────────────────────────────────────
+
+// GET /login — tampilkan halaman login
+app.get('/login', (req: Request, res: Response) => {
+  // Sudah login → redirect ke home
+  if (isAuthenticated(req.headers.cookie)) {
+    return res.redirect('/');
+  }
+  const opts = { serverHost: DISPLAY_HOST, serverPort: PORT };
+  const redirect = (req.query.redirect as string) || '/';
+  res.type('text/html; charset=utf-8').send(renderLoginPage({ ...opts, redirect }));
+});
+
+// POST /auth/login — proses login
+app.post('/auth/login', (req: Request, res: Response) => {
+  const { username, password, redirect } = req.body as Record<string, string>;
+  const opts = { serverHost: DISPLAY_HOST, serverPort: PORT };
+  const redirectTo = redirect && redirect.startsWith('/') ? redirect : '/';
+
+  if (!checkCredentials(username || '', password || '')) {
+    res.type('text/html; charset=utf-8').send(
+      renderLoginPage({ ...opts, error: 'Nama pengguna atau kata sandi salah.', redirect: redirectTo })
+    );
+    return;
+  }
+
+  const token = createSessionToken();
+  res.setHeader('Set-Cookie', makeSetCookieHeader(token));
+  res.redirect(redirectTo);
+});
+
+// GET /auth/logout — hapus sesi
+app.get('/auth/logout', (_req: Request, res: Response) => {
+  res.setHeader('Set-Cookie', makeClearCookieHeader());
+  res.redirect('/');
 });
 
 // ─── API Routes ──────────────────────────────────────────────────────────────
@@ -79,6 +125,10 @@ app.get('/api/tree', async (_req: Request, res: Response) => {
 
 // Create directory
 app.post('/api/mkdir', async (req: Request, res: Response) => {
+  if (!isAuthenticated(req.headers.cookie)) {
+    return res.status(401).json({ error: 'Tidak terautentikasi. Silakan login terlebih dahulu.' });
+  }
+
   const targetPath = req.body?.path;
   if (!targetPath || typeof targetPath !== 'string') {
     return res.status(400).json({ error: 'Parameter "path" wajib disertakan' });
@@ -99,6 +149,10 @@ app.post('/api/mkdir', async (req: Request, res: Response) => {
 
 // ─── DELETE: Remove file or directory ────────────────────────────────────────
 app.delete('{*path}', async (req: Request, res: Response) => {
+  if (!isAuthenticated(req.headers.cookie)) {
+    return res.status(401).json({ error: 'Tidak terautentikasi. Silakan login terlebih dahulu.' });
+  }
+
   const { fullPath, isSafe, relPath } = explorer.resolveSafePath(req.path);
 
   if (!isSafe || fullPath === explorer.getBaseDir()) {
@@ -123,6 +177,10 @@ app.delete('{*path}', async (req: Request, res: Response) => {
 
 // ─── PUT: Upload file (only allowed extensions) ─────────────────────────────
 app.put('{*path}', async (req: Request, res: Response) => {
+  if (!isAuthenticated(req.headers.cookie)) {
+    return res.status(401).json({ error: 'Tidak terautentikasi. Silakan login terlebih dahulu.' });
+  }
+
   const { fullPath, isSafe, relPath } = explorer.resolveSafePath(req.path);
 
   if (!isSafe) {
@@ -216,7 +274,7 @@ app.all('{*path}', async (req: Request, res: Response) => {
 
       return res
         .type('text/html; charset=utf-8')
-        .send(renderHtmlDirectoryListing(result.listing, { ...opts, title: TITLE }));
+        .send(renderHtmlDirectoryListing(result.listing, { ...opts, title: TITLE, isAdmin: isAuthenticated(req.headers.cookie) }));
     }
   } catch (err: any) {
     console.error('[Error]', err.message, err);
