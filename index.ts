@@ -38,7 +38,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, HEAD, PUT, POST, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Range');
-  res.setHeader('Server', 'repo-express/1.0');
+  res.setHeader('Server', 'swirl-mirror/1.0');
   if (req.method === 'OPTIONS') {
     return res.sendStatus(204);
   }
@@ -308,9 +308,9 @@ const server = app.listen(PORT, HOST, () => {
 });
 
 process.on('SIGINT', () => {
-  console.log('\n[repo-express] Mematikan server...');
+  console.log('\n[swirl-mirror] Mematikan server...');
   server.close(() => {
-    console.log('[repo-express] Server berhenti.');
+    console.log('[swirl-mirror] Server berhenti.');
     process.exit(0);
   });
 });

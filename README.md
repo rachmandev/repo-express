@@ -1,6 +1,10 @@
-# repo-express — Debian-Style File Repository & Auto-Discovery
+# 🌀 swirl-mirror — Debian-Style File Repository & Auto-Discovery
 
-Server repositori berkas dengan antarmuka bergaya **Debian Mirror** (`Index of /...`) dan fitur **Real-Time Auto Discovery** otomatis untuk file & folder. Dibangun menggunakan **Express 5** dan **Bun**. Dikhususkan untuk menyimpan dan mendistribusikan file gambar, video, dokumen, image OS, virtual appliance, dan arsip terkompresi (**JPG, JPEG, PNG, WEBP, MP4, MKV, PDF, TXT, DOC, DOCX, ISO, IMG, DMG, OVA, ZIP, RAR**).
+> **💡 Solusi Praktis Berbagi Berkas di Lingkungan Lab & Jaringan Lokal**  
+> Proyek ini dibuat berawal dari kebutuhan di lingkungan lab: ketika ingin memindahkan atau menyalin berkas antar-komputer seringkali ribet harus colok-cabut flashdisk atau harddisk eksternal secara bergantian.  
+> Terinspirasi dari repositori mirror resmi **Debian** (`Index of /...`), **swirl-mirror** hadir sebagai server repositori berkas lokal yang ringan, cepat, dan siap pakai tanpa ribet!
+
+Server repositori berkas dengan antarmuka bergaya **Debian Mirror** dan fitur **Real-Time Auto Discovery** otomatis untuk file & folder. Dibangun menggunakan **Express 5** dan runtime **Bun**. Dikhususkan untuk menyimpan dan mendistribusikan file gambar, video, dokumen, image OS, virtual appliance, dan arsip terkompresi (**JPG, JPEG, PNG, WEBP, MP4, MKV, PDF, TXT, DOC, DOCX, ISO, IMG, DMG, OVA, ZIP, RAR**).
 
 ---
 
@@ -62,19 +66,34 @@ bun run start
 
 Server aktif di: **http://localhost:3000/**
 
-### 3. Konfigurasi (Environment Variables)
+### 3. Konfigurasi (`.env`)
+
+Semua konfigurasi dan kredensial sensitif disimpan di dalam file `.env` (file ini otomatis diabaikan oleh Git via `.gitignore`). Template tersedia di `.env.example`.
+
+Salin template untuk memulai:
+```bash
+cp .env.example .env
+```
 
 | Variabel | Default | Keterangan |
 |---|---|---|
 | `PORT` | `3000` | Port HTTP server |
 | `HOST` | `0.0.0.0` | Bind IP interface |
+| `DISPLAY_HOST` | `localhost` | Host yang ditampilkan pada footer / link |
 | `STORAGE_DIR` | `./storage` | Folder root penyimpanan berkas |
 | `TITLE` | `Debian File Repository` | Judul mirror di header |
+| `ADMIN_USERNAME` | `admin` | Username login admin pengelola |
+| `ADMIN_PASSWORD` | `admin123` | Password login admin (wajib diganti di produksi) |
+| `SESSION_SECRET` | *(64-hex string)* | Kunci HMAC-SHA256 untuk cookie sesi (generate via `openssl rand -hex 32`) |
 
-Contoh kustomisasi (Native):
-```bash
-PORT=8080 STORAGE_DIR=/data/repo TITLE="Debian Local Repository" bun run start
-```
+---
+
+## 🔐 Sistem Autentikasi & Keamanan
+
+- **Akses Publik (Read-Only)**: Siapa saja dapat menjelajahi direktori dan mengunduh berkas tanpa perlu login.
+- **Akses Admin (Write-Access)**: Operasi unggah berkas (`PUT`), buat folder (`/api/mkdir`), dan hapus berkas (`DELETE`) hanya dapat dilakukan setelah login sebagai admin di `/login`.
+- **Sesi Cookie**: Sesi diamankan menggunakan token bertanda tangan kriptografis HMAC-SHA256 (`HttpOnly`, `SameSite=Lax`, masa berlaku 8 jam).
+
 
 ---
 

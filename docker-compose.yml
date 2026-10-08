@@ -1,23 +1,18 @@
 services:
-  repo-express:
+  swirl-mirror:
     build: .
-    container_name: repo-express
+    container_name: swirl-mirror
     restart: unless-stopped
     ports:
       - "${PORT:-3000}:3000"
     volumes:
       # Simpan file di host: folder ./storage pada host di-mount ke /app/storage dalam container
       - ./storage:/app/storage
+    env_file:
+      - .env
     environment:
-      - PORT=3000
-      - HOST=0.0.0.0
+      # Override folder penyimpanan agar mengarah ke direktori dalam container
       - STORAGE_DIR=/app/storage
-      - TITLE=Debian File Repository
-      # ─── Auth ─────────────────────────────────────────────────────────────
-      # Ganti dengan kredensial aman sebelum deploy ke produksi!
-      - ADMIN_USERNAME=admin
-      - ADMIN_PASSWORD=changeme_secure_password
-      - SESSION_SECRET=ganti_ini_dengan_string_hex_64_karakter_acak
     healthcheck:
       test: ["CMD-SHELL", "wget -q --spider http://localhost:3000/api/status || exit 1"]
       interval: 30s

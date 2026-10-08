@@ -1,5 +1,5 @@
 {
-  "name": "repo-express",
+  "name": "swirl-mirror",
   "module": "index.ts",
   "type": "module",
   "private": true,
