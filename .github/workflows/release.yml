@@ -77,7 +77,7 @@ jobs:
           tar -czvf dist/swirl-mirror-docker-quickstart.tar.gz -C dist docker-compose.yml .env.example -C "$GITHUB_WORKSPACE" README.md LICENSE
 
       - name: Publish GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ steps.vars.outputs.tag }}
           name: ${{ steps.vars.outputs.title }}
