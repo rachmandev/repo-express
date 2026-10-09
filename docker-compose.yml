@@ -1,6 +1,9 @@
 services:
   swirl-mirror:
-    build: .
+    # Mengambil image dari GitHub Container Registry (GHCR)
+    # Default ke 'latest', atau atur SWIRL_MIRROR_VERSION di file .env untuk versi tertentu (misal: v1.0.0)
+    image: ghcr.io/rachmandev/swirl-mirror:${SWIRL_MIRROR_VERSION:-latest}
+    # build: . # Uncomment jika ingin build sendiri dari source code secara lokal
     container_name: swirl-mirror
     restart: unless-stopped
     ports:

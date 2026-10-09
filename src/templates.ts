@@ -525,7 +525,7 @@ export function renderHtmlDirectoryListing(
       </span>
     </div>
     <div>
-      <span>repo-express &bull; Auto-Discovery File &amp; Folder</span>
+      <span>swirl-mirror &bull; Auto-Discovery File &amp; Folder</span>
     </div>
   </footer>
 

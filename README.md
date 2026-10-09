@@ -58,11 +58,11 @@ Server repositori berkas dengan antarmuka bergaya **Debian Mirror** dan fitur **
 ## 🚀 Cara Menjalankan
 
 ### 1. Menjalankan dengan Docker Compose (Rekomendasi)
-Penyimpanan berkas langsung di-mount ke host di folder `./storage`:
+Penyimpanan berkas langsung di-mount ke host di folder `./storage`. Docker Compose otomatis menarik (*pull*) image resmi dari **GitHub Container Registry (GHCR)**:
 
 ```bash
-# Jalankan di latar belakang (detached mode)
-docker compose up -d --build
+# Jalankan di latar belakang (langsung menarik image dari GHCR)
+docker compose up -d
 
 # Melihat log server
 docker compose logs -f
@@ -71,11 +71,17 @@ docker compose logs -f
 docker compose down
 ```
 
-### 2. Menggunakan Docker Image dari GHCR
-Anda juga dapat langsung menarik (*pull*) image siap pakai dari GitHub Container Registry tanpa perlu build manual:
+> **Catatan Pemilihan Versi & Riwayat Rilis:**
+> Secara *default*, Docker Compose menggunakan tag `:latest`. Jika ingin menggunakan versi rilis tertentu demi kestabilan (misalnya `v1.0.0` atau `1.0.0`), cukup atur variabel `SWIRL_MIRROR_VERSION` pada file `.env`:
+> ```env
+> SWIRL_MIRROR_VERSION=v1.0.0
+> ```
+
+### 2. Menggunakan Docker Run (GHCR Langsung)
+Anda juga dapat langsung menjalankan container tanpa file compose:
 
 ```bash
-# Tarik image dari GHCR
+# Tarik image dari GHCR (bisa versi tertentu atau latest)
 docker pull ghcr.io/rachmandev/swirl-mirror:latest
 
 # Jalankan container
@@ -117,6 +123,7 @@ cp .env.example .env
 | `ADMIN_USERNAME` | `admin` | Username login admin pengelola |
 | `ADMIN_PASSWORD` | `admin123` | Password login admin (wajib diganti di produksi) |
 | `SESSION_SECRET` | *(64-hex string)* | Kunci HMAC-SHA256 untuk cookie sesi (generate via `openssl rand -hex 32`) |
+| `SWIRL_MIRROR_VERSION` | `latest` | Tag image Docker di GHCR (misal: `latest`, `v1.0.0`, `1.0.0`) |
 
 ---
 

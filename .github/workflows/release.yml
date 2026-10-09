@@ -63,9 +63,18 @@ jobs:
       - name: Create Release Package (Zip & Tar.gz bundle)
         run: |
           mkdir -p dist
+          TAG="${{ steps.vars.outputs.tag }}"
+
+          # Siapkan docker-compose.yml untuk paket rilis:
+          # Default ke tag versi yang dirilis ($TAG), dengan fleksibilitas override via SWIRL_MIRROR_VERSION (misal: 'latest')
+          sed "s|\${SWIRL_MIRROR_VERSION:-latest}|\${SWIRL_MIRROR_VERSION:-${TAG}}|g" docker-compose.yml > dist/docker-compose.yml
+
+          # Siapkan .env.example untuk paket rilis dengan default ke tag versi yang dirilis ($TAG)
+          sed "s|SWIRL_MIRROR_VERSION=latest|SWIRL_MIRROR_VERSION=${TAG}|g" .env.example > dist/.env.example
+
           # Bundle file docker compose & env template untuk kemudahan deploy cepat
-          zip -j dist/swirl-mirror-docker-quickstart.zip docker-compose.yml .env.example README.md LICENSE
-          tar -czvf dist/swirl-mirror-docker-quickstart.tar.gz docker-compose.yml .env.example README.md LICENSE
+          zip -j dist/swirl-mirror-docker-quickstart.zip dist/docker-compose.yml dist/.env.example README.md LICENSE
+          tar -czvf dist/swirl-mirror-docker-quickstart.tar.gz -C dist docker-compose.yml .env.example -C "$GITHUB_WORKSPACE" README.md LICENSE
 
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
@@ -78,6 +87,6 @@ jobs:
           files: |
             dist/swirl-mirror-docker-quickstart.zip
             dist/swirl-mirror-docker-quickstart.tar.gz
-            docker-compose.yml
-            .env.example
+            dist/docker-compose.yml
+            dist/.env.example
 
